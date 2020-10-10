@@ -9,40 +9,31 @@ class Generator(tf.Module):
     def __init__(self, noise_shape: tuple, output_shape: tuple) -> None:
         super().__init__()
         # Network layers
-        self.dense1 = keras.layers.Dense(units=128, input_shape=noise_shape)
-        self.dense2 = keras.layers.Dense(units=256)
-        self.dense3 = keras.layers.Dense(units=512)
-        self.dense4 = keras.layers.Dense(units=np.prod(output_shape))
-        self.output_data = keras.layers.Reshape(target_shape=output_shape)
+        self.layers = [
+            keras.layers.InputLayer(input_shape=noise_shape),
+            keras.layers.Dense(units=128),
+            keras.layers.ReLU(),
+            keras.layers.Dense(units=256),
+            keras.layers.ReLU(),
+            keras.layers.Dense(units=512),
+            keras.layers.ReLU(),
+            keras.layers.Dense(units=np.prod(output_shape)),
+            keras.layers.ReLU(),
+            keras.layers.Reshape(target_shape=output_shape),
+            keras.layers.Activation(tf.nn.sigmoid),
+        ]
 
     @tf.Module.with_name_scope
     def __call__(self, input_data, training=False) -> tf.Tensor:
-        batch_normalization = keras.layers.BatchNormalization()
-        # Activations
-        relu = keras.layers.ReLU()
-        sigmoid = keras.layers.Activation(tf.nn.sigmoid)
-
-        # Feed forward
-        out = input_data
-        out = self.dense1(out)
-        out = batch_normalization(out)
-        out = relu(out)
-        out = self.dense2(out)
-        out = relu(out)
-        out = self.dense3(out)
-        out = relu(out)
-        out = self.dense4(out)
-        out = relu(out)
-        out = self.output_data(out)
-        out = sigmoid(out)
-
-        return out
+        output_data = input_data
+        for layer in self.layers:
+            output_data = layer(output_data)
+        return output_data
 
     # Stochastic Gradient Descent used, as mentioned in the original algorithm
     @staticmethod
     def optimizer(learning_rate: float, momentum: float=0.0):
-        # return tf.optimizers.SGD(learning_rate=learning_rate, momentum=momentum)
-        return tf.optimizers.Adam(.0001)
+        return tf.optimizers.SGD(learning_rate=learning_rate, momentum=momentum)
 
     # Loss_1(G) = mean(1-log(D(G(z_i)))) [Algorithm 1 in GAN Paper]
     # Loss_2(G) = -mean(log(D(G(z_i))))  [3. Adversarial Nets, Paragraph 3 in GAN Paper]
@@ -53,5 +44,3 @@ class Generator(tf.Module):
         loss_i = 1-tf.math.log(generated_output)
         loss = tf.math.reduce_mean(loss_i)
         return loss
-
-# %%

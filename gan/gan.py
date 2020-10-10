@@ -9,7 +9,7 @@ from discriminate import Discriminator
 
 # %% Constants
 NOISE_DIMENSION = 100
-BUFFER_SIZE = 10000
+TRAIN_SIZE = 10000
 BATCH_SIZE = 256
 EPOCHS = 20
 N_EXAMPLES = 12
@@ -18,10 +18,10 @@ D_LEARNING_RATE = 0.01
 
 # %% Load data, normalize to [0, 1], and shuffle/split dataset
 (train_images, _), (test_images, _) = keras.datasets.mnist.load_data()
-train_images = tf.cast(train_images[:BUFFER_SIZE] / 255., tf.float32)
+train_images = tf.cast(train_images[:TRAIN_SIZE] / 255., tf.float32)
 num_images = train_images.shape[0]
 train_dataset = tf.data.Dataset.from_tensor_slices(train_images) \
-                               .shuffle(BUFFER_SIZE) \
+                               .shuffle(TRAIN_SIZE) \
                                .batch(BATCH_SIZE)
 image_shape = train_images.shape[1:]
 
@@ -46,6 +46,7 @@ checkpoint = tf.train.Checkpoint(
 # %% Plotting libraries
 from matplotlib import pyplot as plt
 
+# %%
 # %% Training constants
 fixed_noise = tf.random.normal([N_EXAMPLES, NOISE_DIMENSION])
 metrics_names = ['g_loss', 'd_loss', 'acc', 'real_acc', 'fake_acc']
@@ -124,6 +125,9 @@ for epoch in range(1, EPOCHS+1):
 
     if epoch % 10 == 0:
         view_sample(generator, epoch, fixed_noise)
+
+if EPOCHS % 10 != 0:
+    view_sample(generator, EPOCHS, fixed_noise)
 
 # %% Loss plots
 plt.figure(figsize=(10, 8))

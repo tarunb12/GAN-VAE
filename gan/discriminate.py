@@ -7,37 +7,28 @@ class Discriminator(tf.Module):
     def __init__(self, input_shape: tuple) -> None:
         super().__init__()
         # Network layers
-        self.flatten1 = keras.layers.Flatten(input_shape=input_shape)
-        self.dense1 = keras.layers.Dense(units=512)
-        self.dense2 = keras.layers.Dense(units=256)
-        self.output_data = keras.layers.Dense(units=1)
-        self.dropout = tf.keras.layers.Dropout(0.3)
+        self.layers = [
+            keras.layers.InputLayer(input_shape=input_shape),
+            keras.layers.Flatten(),
+            keras.layers.Dense(units=512),
+            keras.layers.ELU(),
+            keras.layers.Dense(units=256),
+            keras.layers.ELU(),
+            keras.layers.Dense(units=1),
+            keras.layers.Activation(tf.nn.sigmoid),
+        ]
 
     @tf.Module.with_name_scope
     def __call__(self, input_data, training=False):
-        # Activations
-        l_relu = keras.layers.ELU()
-        sigmoid = keras.layers.Activation(tf.nn.sigmoid)
-
-        # Feed forward
-        out = input_data
-        out = self.flatten1(out)
-        out = self.dense1(out)
-        out = l_relu(out)
-        out = self.dropout(out, training=training)
-        out = self.dense2(out)
-        out = l_relu(out)
-        out = self.dropout(out, training=training)
-        out = self.output_data(out)
-        out = sigmoid(out)
-
-        return out
+        output_data = input_data
+        for layer in self.layers:
+            output_data = layer(output_data)
+        return output_data
 
     # Stochastic Gradient Descent used, as mentioned in the original algorithm
     @staticmethod
     def optimizer(learning_rate: float, momentum: float=0.0):
-        # return tf.optimizers.SGD(learning_rate=learning_rate, momentum=momentum)
-        return tf.optimizers.Adam(.0001)
+        return tf.optimizers.SGD(learning_rate=learning_rate, momentum=momentum)
 
     # Asc_Loss(D) = mean(log(D(x_i))+log(1-D(G(z_i))))   [Algorithm 1 from GAN Paper]
     # Desc_Loss(D) = -mean(log(D(x_i))+log(1-D(G(z_i))))
