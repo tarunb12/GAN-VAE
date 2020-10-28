@@ -1,5 +1,6 @@
 {
-    "python.pythonPath": "/home/t/anaconda3/envs/gan-vae/bin/python3",
+    "python.pythonPath": "/home/t/anaconda3/envs/gan-vae/bin/python",
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.dataScience.jupyterServerURI": "local"
 }
