@@ -1,12 +1,12 @@
 # GAN / VAE - MNIST
 
 ## GAN Notebooks
-* [gan_mnist.ipynb](gan/gan_mnist.ipynb)
-* [dcgan_mnist.ipynb](gan/dcgan_mnist.ipynb)
+* [gan_mnist.ipynb](gan/gan_mnist.ipynb) -> [gan.gif](gan/metrics/gan/gan.gif)
+* [dcgan_mnist.ipynb](gan/dcgan_mnist.ipynb) -> [dcgan.gif](gan/metrics/dcgan/dcgan.gif)
 
 ## VAE Notebooks
-* [vae_mnist.ipynb](vae/vae_mnist.ipynb)
-* [cvae_mnist.ipynb](vae/cvae_mnist.ipynb)
+* [vae_mnist.ipynb](vae/vae_mnist.ipynb) -> [vae.gif](vae/metrics/vae/vae.gif)
+* [cvae_mnist.ipynb](vae/cvae_mnist.ipynb) -> [vae.gif](vae/metrics/cvae/cvae.gif)
 
 ### Quick Links
 * [GAN Paper](https://arxiv.org/pdf/1406.2661.pdf)
