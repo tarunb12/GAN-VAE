@@ -6,7 +6,7 @@
 
 ## VAE Notebooks
 * [vae_mnist.ipynb](vae/vae_mnist.ipynb) -> [vae.gif](vae/metrics/vae/vae.gif)
-* [cvae_mnist.ipynb](vae/cvae_mnist.ipynb) -> [vae.gif](vae/metrics/cvae/cvae.gif)
+* [cvae_mnist.ipynb](vae/cvae_mnist.ipynb) -> [cvae.gif](vae/metrics/cvae/cvae.gif)
 
 ### Quick Links
 * [GAN Paper](https://arxiv.org/pdf/1406.2661.pdf)
